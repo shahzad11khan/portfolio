@@ -74,7 +74,7 @@ app.use(
       if (
         !origin ||
         normalizedAllowedOrigins.includes(origin) ||
-        origin.endsWith(".vercel.app") ||
+        origin.endsWith(".onrender.com") ||
         process.env.NODE_ENV === "development"
       ) {
         return callback(null, true);

@@ -1,0 +1,58 @@
+services:
+  # Backend Web Service on Render
+  - type: web
+    name: portfolio-management-system-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      - key: MONGODB_URI
+        value: mongodb+srv://shahzadkhan311666_db_user:xQEGvoNRJ72uT29O@cluster0.pyjwxsg.mongodb.net/portfolio?retryWrites=true&w=majority
+
+      - key: MONGO_URI
+        value: mongodb+srv://shahzadkhan311666_db_user:xQEGvoNRJ72uT29O@cluster0.pyjwxsg.mongodb.net/portfolio?retryWrites=true&w=majority
+
+      - key: JWT_SECRET
+        value: supersecretjwtkey_portfolio_2026_xQEGvoNRJ72uT29O
+
+      - key: JWT_EXPIRE
+        value: 7d
+
+      - key: CLIENT_URL
+        value: https://portfolio-management-system-frontend.onrender.com
+
+      - key: FRONTEND_URL
+        value: https://portfolio-management-system-frontend.onrender.com
+
+      - key: ALLOWED_ORIGINS
+        value: https://portfolio-management-system-frontend.onrender.com
+
+      - key: UPLOAD_DIR
+        value: ./uploads
+
+      - key: MAX_FILE_SIZE
+        value: "5242880"
+
+  # Frontend Static Site on Render
+  - type: static
+    name: portfolio-management-system-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://portfolio-management-system-backend.onrender.com/api
+
+      - key: VITE_API_URL
+        value: https://portfolio-management-system-backend.onrender.com/api
+
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

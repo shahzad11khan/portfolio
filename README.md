@@ -1,6 +1,6 @@
 # PortfolioHub
 
-A full-stack portfolio management system built with the MERN stack, fully configured for seamless deployment on **Vercel**.
+A full-stack portfolio management system built with the MERN stack, configured for deployment on **Render**.
 
 ## Features
 
@@ -9,13 +9,9 @@ A full-stack portfolio management system built with the MERN stack, fully config
 - Project CRUD operations
 - Public portfolio view
 - Responsive UI built with React, Vite & Tailwind CSS
-- Express API configured for Vercel Serverless Functions
+- Express REST API with MongoDB Atlas integration
 
 ## Local Development
-
-### Prerequisites
-- Node.js (v18+)
-- MongoDB Atlas or local MongoDB instance
 
 ### 1. Backend Setup
 ```bash
@@ -23,6 +19,7 @@ cd backend
 npm install
 npm run dev
 ```
+Backend runs on `http://localhost:5000`.
 
 ### 2. Frontend Setup
 ```bash
@@ -30,40 +27,48 @@ cd frontend
 npm install
 npm run dev
 ```
-
-The frontend runs on `http://localhost:5173` and proxies `/api` calls to the backend on `http://localhost:5000`.
+Frontend runs on `http://localhost:5173` and proxies requests to `http://localhost:5000`.
 
 ---
 
-## Deployment on Vercel
+## Production Deployment on Render
 
-This repository is configured to deploy both frontend and backend seamlessly on **Vercel** out-of-the-box.
+This repository includes a `render.yaml` file (Render Blueprint) to automatically deploy both the backend Web Service and the frontend Static Site.
 
-### Option 1: Full-Stack Deployment (Recommended)
-1. Import the repository into your [Vercel Dashboard](https://vercel.com/new).
-2. Leave the **Root Directory** as `./` (default).
-3. Under **Environment Variables**, add:
+### Method 1: Using Blueprint (`render.yaml`) - Recommended
+1. Log in to [Render Dashboard](https://dashboard.render.com/).
+2. Click **New +** and select **Blueprint**.
+3. Connect your GitHub repository: `shahzad11khan/portfolio`.
+4. Render will detect `render.yaml` and configure both services:
+   - **Backend Web Service**: `portfolio-management-system-backend`
+   - **Frontend Static Site**: `portfolio-management-system-frontend`
+5. Click **Apply** to deploy both services automatically.
+
+### Method 2: Manual Setup on Render
+
+#### 1. Backend Web Service
+1. In Render, click **New +** > **Web Service**.
+2. Connect your repo and configure:
+   - **Root Directory**: `backend`
+   - **Environment**: `Node`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+3. Add Environment Variables:
+   - `NODE_ENV`: `production`
    - `MONGODB_URI`: your MongoDB Atlas connection string
    - `MONGO_URI`: your MongoDB Atlas connection string
-   - `JWT_SECRET`: a secure random secret key
-   - `NODE_ENV`: `production`
-4. Click **Deploy**. Vercel will build the frontend and serve API routes via `/api/index.js`.
+   - `JWT_SECRET`: your secret key
+   - `CLIENT_URL`: URL of your frontend static site on Render
 
-### Option 2: Deploy Frontend Only
-1. Import repository on Vercel and set **Root Directory** to `frontend`.
-2. Add environment variable:
-   - `VITE_API_BASE_URL`: URL to your external backend (if hosted separately)
-3. Deploy!
-
----
-
-## Environment Variables Reference
-
-| Variable | Description |
-| :--- | :--- |
-| `MONGODB_URI` / `MONGO_URI` | MongoDB Atlas connection string |
-| `PORT` | Local backend port (default: 5000) |
-| `JWT_SECRET` | Secret key for signing JWT tokens |
-| `JWT_EXPIRE` | JWT expiration duration (e.g., `7d`) |
-| `CLIENT_URL` | Allowed frontend URL for CORS |
-| `VITE_API_BASE_URL` | Frontend API base URL (default: `/api`) |
+#### 2. Frontend Static Site
+1. In Render, click **New +** > **Static Site**.
+2. Connect your repo and configure:
+   - **Root Directory**: `frontend`
+   - **Build Command**: `npm install && npm run build`
+   - **Publish Directory**: `dist`
+3. Add Environment Variables:
+   - `VITE_API_BASE_URL`: `https://<your-backend-service-name>.onrender.com/api`
+   - `VITE_API_URL`: `https://<your-backend-service-name>.onrender.com/api`
+4. Add Rewrite Rule:
+   - **Source**: `/*`
+   - **Destination**: `/index.html`
