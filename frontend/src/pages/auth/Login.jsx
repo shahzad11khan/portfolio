@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, Briefcase } from 'lucide-react';
@@ -19,6 +19,10 @@ export default function Login() {
   var loginFn = useAuth().login;
   var toast = useToast();
   var navigate = useNavigate();
+
+  useEffect(function () {
+    document.title = 'Sign In | Portfolio Admin';
+  }, []);
 
   var handleSubmit = function (e) {
     e.preventDefault();
@@ -61,7 +65,7 @@ export default function Login() {
             <Briefcase className="w-8 h-8 text-white" />
           </motion.div>
           <h1 className="text-3xl font-extrabold text-slate-900 mb-2">Welcome back</h1>
-          <p className="text-slate-500">Sign in to Haris Shah's portfolio dashboard</p>
+          <p className="text-slate-500">Sign in to your portfolio admin dashboard</p>
         </div>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }} className="bg-white/80 backdrop-blur-xl rounded-3xl border border-white/60 p-8 shadow-xl shadow-blue-500/5">
           <form onSubmit={handleSubmit} className="space-y-5" noValidate>

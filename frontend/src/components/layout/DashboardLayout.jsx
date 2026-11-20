@@ -1,12 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Sidebar from './Sidebar';
 import TopNav from './TopNav';
+import { useAuth } from '../../context/AuthContext';
+
+var PAGE_TITLES = {
+  '/dashboard': 'Dashboard',
+  '/admin': 'Dashboard',
+  '/projects': 'Projects',
+  '/projects/new': 'Add New Project',
+  '/profile': 'Profile Settings',
+  '/settings': 'System Settings',
+};
 
 export default function DashboardLayout(props) {
   var children = props.children;
   var location = useLocation();
+  var { user } = useAuth();
 
   var collapsedState = useState(false);
   var collapsed = collapsedState[0];
@@ -16,28 +27,53 @@ export default function DashboardLayout(props) {
   var mobileOpen = mobileState[0];
   var setMobileOpen = mobileState[1];
 
+  // Dynamic Browser Document Title for Admin Panel
+  useEffect(
+    function () {
+      var pathname = location.pathname;
+      var pageTitle = PAGE_TITLES[pathname];
+      if (!pageTitle) {
+        if (pathname.includes('/projects/') && pathname.includes('/edit')) {
+          pageTitle = 'Edit Project';
+        } else {
+          pageTitle = 'Admin Panel';
+        }
+      }
+      var ownerName = user && user.name ? user.name + ' | ' : '';
+      document.title = pageTitle + ' — ' + ownerName + 'Portfolio Admin';
+    },
+    [location.pathname, user && user.name]
+  );
+
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(14,165,233,0.08),_transparent_34%),linear-gradient(135deg,_#f8fafc_0%,_#f1f5f9_100%)]">
       <Sidebar
         collapsed={collapsed}
         mobileOpen={mobileOpen}
-        onMobileClose={function () { setMobileOpen(false); }}
+        onMobileClose={function () {
+          setMobileOpen(false);
+        }}
       />
 
       {/* Desktop: animated margin. Mobile: no margin. */}
       <div
         className="md:transition-[margin] md:duration-300 md:ease-[cubic-bezier(0.4,0,0.2,1)]"
         style={{
-          marginLeft: typeof window !== 'undefined' && window.innerWidth >= 768
-            ? (collapsed ? 72 : 260) + 'px'
-            : '0px',
+          marginLeft:
+            typeof window !== 'undefined' && window.innerWidth >= 768
+              ? (collapsed ? 72 : 260) + 'px'
+              : '0px',
         }}
         id="main-content-area"
       >
         <TopNav
           collapsed={collapsed}
-          onToggle={function () { setCollapsed(!collapsed); }}
-          onMobileOpen={function () { setMobileOpen(true); }}
+          onToggle={function () {
+            setCollapsed(!collapsed);
+          }}
+          onMobileOpen={function () {
+            setMobileOpen(true);
+          }}
           pathname={location.pathname}
         />
 

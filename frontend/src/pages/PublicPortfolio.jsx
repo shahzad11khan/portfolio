@@ -28,13 +28,19 @@ export default function PublicPortfolio() {
       .finally(() => setLoading(false));
   }, []);
 
-  var profileName = profile && profile.name ? profile.name : 'Haris Shah';
+  var profileName = profile && profile.name ? profile.name : 'Portfolio Showcase';
   var profileHeadline = profile && profile.headline ? profile.headline : 'I build practical web experiences with modern tools and a strong focus on usability.';
   var profileRole = profile && profile.role ? profile.role : 'Software Developer';
   var profileAbout = profile && profile.about ? profile.about : 'I am passionate about creating clean, practical web experiences and turning ideas into polished digital products.';
-  var profileEmail = (profile && profile.emailAddress) || (profile && profile.email) || 'haris@example.com';
-  var profileGithub = profile && profile.githubUrl ? profile.githubUrl : 'https://github.com/harisshah133560';
-  var profileLinkedin = profile && profile.linkedinUrl ? profile.linkedinUrl : 'https://www.linkedin.com/in/harisshah-/';
+  var profileEmail = (profile && profile.emailAddress) || (profile && profile.email) || '';
+  var profileGithub = profile && profile.githubUrl ? profile.githubUrl : '';
+  var profileLinkedin = profile && profile.linkedinUrl ? profile.linkedinUrl : '';
+
+  // Dynamic Browser Document Title
+  useEffect(() => {
+    var title = profileName ? `${profileName} — ${profileRole}` : 'Portfolio Showcase';
+    document.title = title;
+  }, [profileName, profileRole]);
   var profileAvatar = profile && profile.avatar ? getAssetUrl(profile.avatar) : null;
   var profileCv = profile && profile.cvUrl ? getAssetUrl(profile.cvUrl) : null;
   var defaultSkills = ['React', 'Node.js', 'MongoDB', 'Tailwind CSS', 'Express', 'REST APIs'];
