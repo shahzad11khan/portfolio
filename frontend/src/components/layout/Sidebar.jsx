@@ -10,6 +10,7 @@ import {
   LogOut,
   Globe,
   ExternalLink,
+  Briefcase,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
@@ -79,19 +80,14 @@ function SidebarNav(props) {
 
         <AnimatePresence>
           {!collapsed && (
-            <motion.div
+            <motion.span
               initial={{ opacity: 0, width: 0 }}
               animate={{ opacity: 1, width: 'auto' }}
               exit={{ opacity: 0, width: 0 }}
-              className="overflow-hidden flex flex-col justify-center min-w-0"
+              className="text-base font-bold text-slate-900 tracking-tight overflow-hidden whitespace-nowrap"
             >
-              <span className="text-sm font-bold text-slate-900 tracking-tight truncate leading-tight">
-                {displayName}
-              </span>
-              <span className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider truncate">
-                {displayRole}
-              </span>
-            </motion.div>
+              Admin Panel
+            </motion.span>
           )}
         </AnimatePresence>
       </div>
